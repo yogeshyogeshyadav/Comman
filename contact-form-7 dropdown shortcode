@@ -1,0 +1,18 @@
+wpcf7_add_shortcode('taxonomy','taxonomy_function'); 
+function taxonomy_function(){ 
+		$html = '';
+        $categories = array(
+           'taxonomy' => 'topics'
+        );
+        if($categories):
+        	$html .='<select class="custom-class">';
+        ?>
+        <?php
+        	$category = get_categories($categories);
+        	foreach ($category as $cat) {
+        		$html .='<option value="'.get_term_link($cat->slug, $cat->taxonomy).'">'.$cat->name.'</option>';
+        	}
+        	$html .='</select>';
+        endif;
+  		return $html;
+}
