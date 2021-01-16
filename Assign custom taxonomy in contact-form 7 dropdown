@@ -1,0 +1,32 @@
+function dynamic_select_list($taxonomy) {
+    if( 'select' !== $taxonomy['type'] && ('select*' !== $taxonomy['type']) ) {
+        return $taxonomy;
+    } else if ( empty( $taxonomy['options'] ) ) {
+        return $taxonomy;
+    }
+    $term_args = array('topics');
+    foreach( $taxonomy['options'] as $option ) {
+        $matches = explode( ':', $option );
+        if( ! empty( $matches ) ) {
+            switch( $matches[0] ) {
+                case 'taxonomy':
+                    $term_args['taxonomy'] = $matches[1];
+                    break;
+                case 'parent':
+                    $term_args['parent'] = intval( $matches[1] );
+                    break;
+            }
+        }
+    }
+    if( empty( $term_args ) ) {
+        return $taxonomy;
+    }
+    $terms = get_terms( $term_args );
+    if( ! empty( $terms ) && ! is_wp_error( $term_args ) ) {
+        foreach( $terms as $term ) {
+            $taxonomy['values'][] = $term->name;
+        }
+    }
+    return $taxonomy;
+}
+add_filter( 'wpcf7_form_tag', 'dynamic_select_list', 10 );
