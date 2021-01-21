@@ -27,3 +27,5 @@ function AO_get_recent_post_shortcode($atts,$content = null){
 	return '<atricle class="recent-post"><ul>'. $output .'</ul></article>';
 }
 add_shortcode('recent_posts', 'AO_get_recent_post_shortcode');
+// using this code you can retrive wp post view shortcode
+<?php echo do_shortcode('[recent_posts num="4" cat="" order="asc" orderby="rand"]'); ?>
