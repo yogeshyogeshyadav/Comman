@@ -19,7 +19,7 @@ function AO_get_recent_post_shortcode($atts,$content = null){
 		$output .= '<li><a href="'. get_the_permalink() .'">'. get_the_title() .'</a></li>';
 		$output .= '<p>'. get_the_excerpt() .'</p>';
 		if(has_post_thumbnail()){
-			$output .=	the_post_thumbnail();
+			$output .= the_post_thumbnail('medium');
 		} 
 		
 	}
