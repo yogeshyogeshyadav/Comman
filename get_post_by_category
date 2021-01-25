@@ -1,0 +1,51 @@
+<section class="films-tabs pd-40" id="portfolio">
+    <?php $categories = get_terms('portfolio'); ?>
+    <div class="container">
+        <div class="row">
+            <ul class="nav nav-tabs nav-justified">
+                <?php foreach($categories as $cat) { ?>
+                <li>
+                    <a href="#<?php echo $cat->slug ?>" data-toggle="tab"><?php echo $cat->name ?></a>
+                </li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <?php foreach($categories as $cat) { ?>
+        <div class="tab-pane" id="<?php echo $cat->slug ?>">
+            <?php 	
+        		$args = array(
+          			'post_type' =>'portfolio', 
+          			'showposts' => -1, 
+          			'orderby' => 'title', 
+          			'order' => 'ASC', 
+          			'tax_query' => array( 
+          				array( 
+          					'taxonomy' => 'portfolio', 
+	          				'field' => 'slug', 
+	          				'terms' => $cat->slug 
+          				)
+          			) 
+          		); 
+          	$films = new WP_Query($args);
+            if($films->have_posts()) :?>
+            <div class="table">
+                <div class="container">
+                    <div class="row">
+                        <?php while ($films->have_posts()) : $films->the_post(); ?>
+	                        <div class="table-cont">
+	                            <a data-fancybox="gallery" href="<?php echo get_the_post_thumbnail_url();?>" .>
+	                            	<?php the_post_thumbnail() ?>
+	                            </a>
+	                        </div>
+                        <?php endwhile; ?>
+                        <?php wp_reset_query() ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php } ?>
+    </div>
+</section>
