@@ -1,0 +1,34 @@
+var AO = document.createElement('script');
+var AO_script = document.getElementsByTagName('script')[0];
+AO.src = "https://www.youtube.com/iframe_api";
+AO_script.parentNode.insertBefore(AO, AO_script);
+var videos = new Array;
+window.onYouTubeIframeAPIReady = function() {
+    const players = document.querySelectorAll('[data-video]');
+    Array.from(players).forEach(video => {
+        const player = new YT.Player(video.id, {
+            height: "360",
+            width: "640",
+            videoId: video.dataset.video, 
+        });
+        player.divid = video.id;
+        videos.push(player);
+    });
+}
+function playVideo(video_id = false ) {
+    videos.forEach( video => {
+        video.pauseVideo();
+    });
+    if(video_id) {
+        const index = videos.map(e => e.divid).indexOf(video_id);
+        const video = videos[index];
+        video.setVolume(0);
+        video.playVideo();
+    }
+}
+onChange: (slide) {
+    const iframe = slide.querySelector('iframe');
+    if (iframe) {
+        playVideo(iframe.id);
+    }
+}
