@@ -1,0 +1,61 @@
+<?php
+ // template codes
+if(get_query_var('paged')) {
+   $paged = get_query_var('paged');
+}else if(get_query_var('page')) {
+   $paged = get_query_var('page');
+}else {
+   $paged = 1;
+}
+
+$my_args = array(
+  'post_type' => 'post',
+  'posts_per_page' => 2,
+  'paged' => $paged
+);
+
+$AO_query = new WP_Query( $my_args );
+if ($AO_query->have_posts()) :
+   while ($AO_query->have_posts()) :
+   $AO_query->the_post(); ?>
+   <h2><?php the_title(); ?></h2>
+   <p><?php the_excerpt(); ?></p>
+<?php endwhile;
+<?php else: ?>
+  <h2>Not found</h2>
+<?php endif; ?>
+
+
+// show pagination
+if(function_exists('AO_pagination')) {
+    AO_pagination( $AO_query );
+}?>
+
+//functions.php
+
+function AO_pagination( $query=null ) {
+  global $wp_query;
+  $query = $query ? $query : $wp_query;
+  $big = 999999999;
+  $paginate = paginate_links( array(
+    'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+    'type' => 'array',
+    'total' => $query->max_num_pages,
+    'format' => '?paged=%#%',
+    'current' => max( 1, get_query_var('paged') ),
+    'prev_text' => __('&laquo;'),
+    'next_text' => __('&raquo;'),
+    )
+  );
+  if ($query->max_num_pages > 1) :
+?>
+<ul class="pagination">
+  <?php
+  foreach ( $paginate as $page ) {
+    echo '<li>' . $page . '</li>';
+  }
+  ?>
+</ul>
+<?php
+  endif;
+}
