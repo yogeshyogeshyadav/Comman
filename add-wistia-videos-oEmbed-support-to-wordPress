@@ -1,0 +1,19 @@
+Add Wistia videos oEmbed support to WordPress
+
+add_action( 'init', function () {
+    wp_oembed_add_provider( '/https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/.*/', 'http://fast.wistia.net/oembed', true );
+});
+
+
+
+$('.class').click( function(event) {
+	if(event.preventDefault) { event.preventDefault(); }
+	$video = $(this).closest('iframe');
+	if ( $video.hasClass('wistia_embed') ) {
+		window._wq = window._wq || [];
+		$video_id  = /[^/]*$/.exec( $video.attr('src') )[0];
+		_wq.push({ id: $video_id, onReady: function(video) {
+			video.play();
+		}});
+	}
+});
