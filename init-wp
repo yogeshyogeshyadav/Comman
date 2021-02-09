@@ -1,0 +1,4 @@
+function custom_callback_function(){
+    echo 'I will be fired on WordPress initialization';
+}
+add_action( 'init', 'custom_callback_function' );
