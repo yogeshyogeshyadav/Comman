@@ -1,0 +1,7 @@
+add_filter( 'the_content', 'insert_content_below' );
+function insert_content_below($content) {
+    if (is_single()) {
+        return $content . "<h3 style=\"text-align: center;\">Let me insert myself here</h3><p style=\"text-align: center;border: 3px solid #5333ed;\">I'll appear after the post. You can insert anything here. Even HTML. Headers, links, images, scripts, I'll take them all and append it to the end of the post content. You can also give me a class, so you can style me easily with CSS style sheets.</p>" ;
+    } 
+    return $content;
+}
