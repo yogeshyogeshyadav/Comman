@@ -103,3 +103,24 @@ foreach ($myterms as $myterm)
 }
 }
 ?>
+
+
+Update wp-admin login logo and link
+
+
+/***********************************************************************************************/
+/* Update the WordPress Login Logo And URL  */
+/***********************************************************************************************/
+function an_login_logo() { ?>
+<style>
+    #login h1 a, .login h1 a { background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/include/images/american-narrative-logo.png);background-repeat: no-repeat;padding-bottom: 10px;}
+</style>
+<?php }
+add_action( 'login_enqueue_scripts','an_login_logo');
+function an_site_url() {  return home_url(); }
+add_filter( 'login_headerurl', 'an_site_url' );
+
+function an_back_to_site_url( $link ) {
+    return '<a href="' . esc_url( home_url( '/' ) ) . '">' . __( 'Back to the website', 'american_narratives' ) . '</a>';
+}
+add_filter( 'login_site_html_link', 'an_back_to_site_url', 10, 1 );
