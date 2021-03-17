@@ -1,0 +1,5 @@
+Reverse title
+
+add_filter('the_title', 'strrev');
+
+http://ottopress.com/tag/code-2/
