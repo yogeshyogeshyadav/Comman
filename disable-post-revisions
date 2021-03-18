@@ -1,0 +1,23 @@
+How Disable WordPress revisions?
+
+Post revisions is a WordPress feature that allows you to undo changes and go back to an earlier version of your posts and pages.
+For each draft you are working on, WordPress automatically saves a temporary revision. This type of revision is called auto-save.
+WordPress stores an auto-save every 60 seconds. It also automatically replaces the older version with the new auto-save.
+You can disable revisions form your posts, pages by following these steps
+
+1. Go to wordpress root folder
+
+2.Navigate to your wp-config. php file.
+
+3. Enter in the following code towards the top of the wp-config.php file: 
+define('WP_POST_REVISIONS', false );
+
+
+You can also delete revisions by using SQL commands 
+DELETE FROM wp_posts WHERE post_type = "revision";
+
+
+You can also limit you revisions by using this code in wp-config.php file
+define( 'WP_POST_REVISIONS', 10 );
+
+By follwoing these steps you can disable revisions form posts and pages.
