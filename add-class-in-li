@@ -1,0 +1,10 @@
+function add_classes_on_li($classes, $item, $args) {
+  $classes[] = 'nav-item';
+  return $classes;
+}
+add_filter('nav_menu_css_class','add_classes_on_li',10,4);
+function add_link_atts($atts) {
+  $atts['class'] = "nav-link js-scroll-trigger";
+  return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'add_link_atts');
