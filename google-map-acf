@@ -1,0 +1,15 @@
+/***********************************************************************************************/
+/* Register Google Map API */
+/***********************************************************************************************/
+// AIzaSyAxn7S4fhOXWsksbnTzn1siIGE_fKkqrtk
+//AIzaSyD69QLQZzHQ2vCjpWOHGcTnZ1r8InSQRJY
+function acc_acf_google_map_api( $api ){
+    $api['key'] = 'AIzaSyD69QLQZzHQ2vCjpWOHGcTnZ1r8InSQRJY';
+    return $api;
+}
+add_filter('acf/fields/google_map/api', 'acc_acf_google_map_api');
+function acc_acf_init() {
+    acf_update_setting('google_api_key', 'AIzaSyD69QLQZzHQ2vCjpWOHGcTnZ1r8InSQRJY');
+}
+add_action('acf/init', 'acc_acf_init');
+}
