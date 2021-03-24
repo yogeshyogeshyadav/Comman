@@ -59,3 +59,50 @@ function AO_pagination( $query=null ) {
 <?php
   endif;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/*==========================*/ 
+/* Redirect to slug */ 
+/*==========================*/
+jQuery('.mobile-cat').change(function() {
+  console.log('value');
+  window.location = $(this).val();
+});
+
+jQuery(document).ready(function ($) {
+  $("#pagination > ul").addClass("page-num type2 d-flex justify-content-end");
+  $("#pagination > ul").removeClass("page-numbers");
+  //console.log('ok');
+});
+jQuery(document).ready(function ($) {
+  $("#event-pagination > ul").addClass("page-num type2 d-flex justify-content-end");
+  $("#event-pagination > ul").removeClass("page-numbers");
+  //console.log('ok');
+});
+jQuery(document).ready(function ($) {
+  $(".patients-pagination > ul").addClass("page-num d-flex justify-content-end");
+  $(".patients-pagination > ul").removeClass("page-numbers");
+  //console.log('ok');
+});
+</script>
