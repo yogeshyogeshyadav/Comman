@@ -13,3 +13,12 @@ function acc_acf_init() {
 }
 add_action('acf/init', 'acc_acf_init');
 }
+
+
+<?php 
+      $location = get_field('location');
+      if($location): ?>
+      <div class="map-container acf-map" data-zoom="16">
+        <div class="marker" data-lat="<?php echo esc_attr($location['lat']); ?>" data-lng="<?php echo esc_attr($location['lng']); ?>"></div>
+      </div>
+<?php endif; ?>
