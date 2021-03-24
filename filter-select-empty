@@ -1,0 +1,9 @@
+/***********************************************************************************************/
+/* Filter for CF7 select empty */
+/***********************************************************************************************/
+function acc_wpcf7_form_elements($html) {
+    $text = 'Please select';
+    $html = str_replace('<option value="">---</option>', '<option value="">' . $text . '</option>', $html);
+    return $html;
+}
+add_filter('wpcf7_form_elements', 'acc_wpcf7_form_elements');
