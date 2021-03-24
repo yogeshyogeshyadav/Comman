@@ -1,0 +1,27 @@
+/***********************************************************************************************/
+/* Actions for removing category,tags & comments */
+/***********************************************************************************************/
+// Remove Categories and Tags
+add_action('init', 'acc_remove_tax');
+function acc_remove_tax() {
+    register_taxonomy('category', array());
+    register_taxonomy('post_tag', array());
+    //register_post_type('post', array());
+}
+// Removes from admin menu
+add_action( 'admin_menu', 'acc_remove_admin_menus' );
+function acc_remove_admin_menus() {
+    remove_menu_page( 'edit-comments.php' );
+}
+// Removes from post and pages
+add_action('init', 'acc_remove_comment_support', 100);
+function acc_remove_comment_support() {
+    remove_post_type_support( 'post', 'comments' );
+    remove_post_type_support( 'page', 'comments' );
+}
+// Removes from admin bar
+function acc_admin_bar_render() {
+    global $wp_admin_bar;
+    $wp_admin_bar->remove_menu('comments');
+}
+add_action( 'wp_before_admin_bar_render', 'acc_admin_bar_render' );
