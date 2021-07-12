@@ -1,3 +1,0 @@
-<script>
-$('.wpcf7-submit').wrap('<div class="submit-form-btn test-btn"></div>');
-</script>

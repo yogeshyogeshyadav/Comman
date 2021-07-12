@@ -1,5 +1,0 @@
-
-add_action( 'wp_body_open', 'ao_add_script_after_body_open');
-function ao_add_script_after_body_open() {
-    echo '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-J4LMVLR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
-}

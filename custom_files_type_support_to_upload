@@ -1,8 +1,0 @@
-add_filter('upload_mimes', 'custom_files_type_support_to_upload');
-function custom_files_type_support_to_upload( $existing_mimes ){
-  $existing_mimes['zip']  = 'application/zip';
-  $existing_mimes['swf']  = 'application/x-shockwave-flash';
-  $existing_mimes['rtf']  = 'text/richtext';
-  $existing_mimes['tiff'] = 'image/tiff';
-  return $existing_mimes;
-}
