@@ -1,0 +1,27 @@
+ <?php 
+            $args = array('post_type'=> 'services','post_status'=> 'publish',);
+			$query = new WP_Query($args);
+			if($query->have_posts()):
+			?>
+            <div class="col-md-4 fix">
+                <div class="service-sidebar">
+                    <h4 class="color-text">Our Services</h4>
+                    <ul class="other-service-list">
+                    	<?php 
+                    	$slug = get_queried_object()->post_name;
+	                    while($query->have_posts()) : $query->the_post();
+	                    $permalink = get_the_permalink();
+	                    $last_seg = basename($permalink);
+	                    $icon = get_field('icon');
+	                    ?>
+                        <li>
+                            <a href="<?php echo esc_html($permalink); ?>" class="<?php if($slug == $last_seg): echo 'active'; endif; ?>">
+                                <div class="service-list-icon"><?php echo html_entity_decode(esc_html($icon)); ?></div>
+                                <span><?php the_title(); ?></span>
+                            </a>
+                        </li>
+                        <?php endwhile; ?>
+                    </ul>
+                </div>
+            </div>
+        	<?php endif; ?>
