@@ -1,0 +1,11 @@
+/***********************************************************************************************/
+// Replace IMG ALT with title if ALT is empty
+/***********************************************************************************************/
+function ao_filter_gallery_img_atts( $atts, $attachment ) {
+    if(empty($atts['alt'])){
+        $atts['alt'] = str_replace('-', ' ', get_the_title($attachment->ID));
+    }
+    return $atts;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'ao_filter_gallery_img_atts', 10, 2 );
+}
