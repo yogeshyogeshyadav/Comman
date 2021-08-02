@@ -1,0 +1,8 @@
+
+
+add_filter ('get_the_excerpt','wpse240352_filter_excerpt');
+
+function wpse240352_filter_excerpt ($post_excerpt) { 
+  $post_excerpt = '<ul class="tick-list">' . $post_excerpt . '</ul>';
+  return $post_excerpt;
+} 
