@@ -1,0 +1,4 @@
+add_action('admin_menu', 'smp_remove_option_page', 99);
+function smp_remove_option_page() {
+    remove_menu_page('options-general.php');
+}
