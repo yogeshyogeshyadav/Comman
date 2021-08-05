@@ -1,0 +1,6 @@
+add_filter('nav_menu_css_class' , 'smp_active_nav_class' , 10 , 2);
+function smp_active_nav_class ($classes, $item) {
+    if (in_array('current-post-ancestor', $classes) || in_array('current-page-ancestor', $classes) || in_array('current-menu-item', $classes) ){
+        $classes[] = 'active ';
+    }
+    return $classes;
