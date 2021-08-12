@@ -1,0 +1,130 @@
+if($_POST['post_submit']=='Sumbit'){
+    $user_login = $_POST['user_login'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $nickname = $_POST['nickname'];
+    $email = $_POST['email'];
+    $display_name = $_POST['display_name'];
+    $userdata = array(
+    'user_login'    =>  $user_login,
+    'user_email'    =>  $email,
+    'first_name'    =>  $first_name,
+    'last_name'     =>  $last_name,
+    'nickname'      =>  $nickname,
+    'role' => 'editor'
+    );
+    $user = wp_insert_user( $userdata );
+}
+?>
+<form class="my-5" method="post" action="<?php echo home_url('/') ?>">
+    <input type="text" name="user_login" placeholder="Username"><br>
+    <input type="text" name="first_name" placeholder="First Name"><br>
+    <input type="text" name="last_name" placeholder="Last Name"><br>
+    <input type="text" name="nickname" placeholder="Nickname"><br>
+    <input type="text" name="display_name" placeholder="Display name"><br>
+    <input type="text" name="email" placeholder="Email"><br>
+    <input type="text" name="url" placeholder="Website"><br>
+    <input type="text" name="description" placeholder="Biographical Info"><br>
+    <input type="text" name="address" placeholder="Address"><br>
+    <input type="text" name="city" placeholder="City"><br>
+    <input type="text" name="postalcode" placeholder="Postal Code"><br>
+    <input type="text" name="test-1" placeholder="Test One"><br>
+    <input type="text" name="test2" placeholder="Test Two"><br>
+     <input id="sumbit" class="btn-hover color-1 btn-save" type="submit" name="post_submit" value="Sumbit" />
+</form>
+
+// Add fields in user profile
+
+add_action( 'show_user_profile', 'extra_user_profile_fields' );
+add_action( 'edit_user_profile', 'extra_user_profile_fields' );
+
+function extra_user_profile_fields( $user ) { ?>
+    <h3><?php _e("Extra profile information", "blank"); ?></h3>
+
+    <table class="form-table">
+    <tr>
+        <th><label for="address"><?php _e("Address"); ?></label></th>
+        <td>
+            <input type="text" name="address" id="address" value="<?php echo esc_attr( get_the_author_meta( 'address', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your address."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="city"><?php _e("City"); ?></label></th>
+        <td>
+            <input type="text" name="city" id="city" value="<?php echo esc_attr( get_the_author_meta( 'city', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your city."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Postal Code"); ?></label></th>
+        <td>
+            <input type="text" name="postalcode" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test One"); ?></label></th>
+        <td>
+            <input type="text" name="test-1" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test One"); ?></label></th>
+        <td>
+            <input type="text" name="test2" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test Three"); ?></label></th>
+        <td>
+            <input type="text" name="test3" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test Four"); ?></label></th>
+        <td>
+            <input type="text" name="test4" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test Five"); ?></label></th>
+        <td>
+            <input type="text" name="test5" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test six"); ?></label></th>
+        <td>
+            <input type="text" name="test6" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test seven"); ?></label></th>
+        <td>
+            <input type="text" name="test7" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test eight"); ?></label></th>
+        <td>
+            <input type="text" name="test8" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="postalcode"><?php _e("Test nine"); ?></label></th>
+        <td>
+            <input type="text" name="test9" id="postalcode" value="<?php echo esc_attr( get_the_author_meta( 'postalcode', $user->ID ) ); ?>" class="regular-text" /><br />
+            <span class="description"><?php _e("Please enter your postal code."); ?></span>
+        </td>
+    </tr>
+    </table>
+<?php }
