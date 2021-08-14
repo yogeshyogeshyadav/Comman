@@ -261,3 +261,4 @@ function crf_user_register( $user_id ) {
 // Post data using front-end form
 
 https://wordpress.stackexchange.com/questions/272582/submitting-custom-post-types-with-custom-fields-from-front-end-form
+https://gist.github.com/bueltge/1045695
