@@ -257,3 +257,7 @@ function crf_user_register( $user_id ) {
     update_user_meta( $user_id, 'test8', $_POST['test8'] );
     update_user_meta( $user_id, 'test9', $_POST['test9'] );
 }
+
+// Post data using front-end form
+
+https://wordpress.stackexchange.com/questions/272582/submitting-custom-post-types-with-custom-fields-from-front-end-form
