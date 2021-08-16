@@ -698,4 +698,16 @@ get_header();
 </div>
 <?php
 get_footer();
+
+
+ /* $passport_copy_clear_color_copy = $_POST['passport_copy_clear_color_copy'];
+        $passport_standard_size_photo = $_POST['passport_standard_size_photo'];
+        $uae_visa_copy_or_uid_number = $_POST['uae_visa_copy_or_uid_number'];
+        $emirates_id_copy = $_POST['emirates_id_copy'];
+        if($id){
+            update_post_meta($id, 'passport_copy_clear_color_copy', $passport_copy_clear_color_copy);
+            update_post_meta($id, 'passport_standard_size_photo', $passport_standard_size_photo);
+            update_post_meta($id, 'uae_visa_copy_or_uid_number', $uae_visa_copy_or_uid_number);
+            update_post_meta($id, 'emirates_id_copy', $emirates_id_copy);
+        }*/
 ?>
