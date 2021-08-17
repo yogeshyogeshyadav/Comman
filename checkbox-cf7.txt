@@ -1,0 +1,14 @@
+Contact Form 7 - Give each checkbox a class?
+
+jQuery(document).ready(function($){
+  $('.wpcft-form-control div.checkbox').addClass('col-4');
+}
+
+<div class="col-4">[checkbox checkbox-x  "option1"]</div>
+<div class="col-4">[checkbox checkbox-x  "option2"]</div>
+<div class="col-4">[checkbox checkbox-x  "option3"]</div>
+
+
+<style>
+.wpcft-form-control div.checkbox{width:33%;max-width:33%;float:left}
+</style>
