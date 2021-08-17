@@ -1,0 +1,44 @@
+How to save contact form 7 data in Custom Post Types (CPT)
+
+add_action('wpcf7_mail_sent','save_my_form_data_to_my_cpt');
+add_action('wpcf7_mail_failed','save_my_form_data_to_my_cpt');
+
+function save_my_form_data_to_my_cpt($contact_form){
+    $submission = WPCF7_Submission::get_instance();
+    if (!$submission){
+        return;
+    }
+    $posted_data = $submission->get_posted_data();
+    //The Sent Fields are now in an array
+    //Let's say you got 4 Fields in your Contact Form
+    //my-email, my-name, my-subject and my-message
+    //you can now access them with $posted_data['my-email']
+    //Do whatever you want like:
+    $new_post = array();
+    if(isset($posted_data['my-subject']) && !empty($posted_data['my-subject'])){
+        $new_post['post_title'] = $posted_data['my-subject'];
+    } else {
+        $new_post['post_title'] = 'Message';
+    }
+    $new_post['post_type'] = 'my_awesome_cpt'; //insert here your CPT
+    if(isset($posted_data['my-message'])){
+        $new_post['post_content'] = $posted_data['my-message'];
+    } else {
+        $new_post['post_content'] = 'No Message was submitted';
+    }
+    $new_post['post_status'] = 'publish';
+    //you can also build your post_content from all of the fields of the form, or you can save them into some meta fields
+    if(isset($posted_data['my-email']) && !empty($posted_data['my-email'])){
+        $new_post['meta_input']['sender_email_address'] = $posted_data['my-email'];
+    }
+    if(isset($posted_data['my-name']) && !empty($posted_data['my-name'])){
+        $new_post['meta_input']['sender_name'] = $posted_data['my-name'];
+    }
+    //When everything is prepared, insert the post into your Wordpress Database
+    if($post_id = wp_insert_post($new_post)){
+       //Everything worked, you can stop here or do whatever
+    } else {
+       //The post was not inserted correctly, do something (or don't ;) )
+    }
+    return;
+}
