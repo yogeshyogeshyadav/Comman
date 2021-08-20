@@ -74,7 +74,43 @@ function AO_pagination( $query=null ) {
 
 
 
+/***********************************************************************************************/
+/*Pagination for paged posts, Page 1, Page 2, Page 3, with Next and Previous Links, No plugin*/
+/***********************************************************************************************/
+if ( ! function_exists( 'ao_wp_pagination' ) ) :
+    function ao_wp_pagination( $paged = '', $max_page = '' ){
+        global $wp_query;
+        $big = 999999999; // need an unlikely integer
+        if( ! $paged )
+            $paged = get_query_var('paged');
+        if( ! $max_page )
+            $max_page = $wp_query->max_num_pages;
 
+        $pagination = paginate_links( array(
+            'base'       => str_replace($big, '%#%', esc_url(get_pagenum_link( $big ))),
+            'format'     => '?paged=%#%',
+            'current'    => max( 1, $paged ),
+            'total'      => $max_page,
+            'prev_next'    => true,
+            'prev_text'    => __('<i class="fa fa-angle-left"></i>'),
+            'next_text'    => __('<i class="fa fa-angle-right"></i>'),
+            'type'       => 'array'
+        ) );
+        $pagination = str_replace('page/1/','', $pagination);
+        if(is_array($pagination)){
+            $pagination_html = '<ul class="pagination">';
+                foreach ( $pagination as $key => $page_link ):
+                    $pagination_html .= '<li class="page-item '.(strpos($page_link,'current') !== false?'active':'').'">'. str_replace( 'page-numbers', 'page-link', $page_link ).'</li>';
+                endforeach;
+            $pagination_html .= '</ul>';
+            return $pagination_html;
+        }
+
+    }
+    add_action('init', 'ao_wp_pagination');
+endif;
+
+}
 
 
 
