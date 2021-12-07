@@ -1,0 +1,16 @@
+/***********************************************************************************************/
+/* Grandparent Active */
+/***********************************************************************************************/
+function wpse_310629_nav_menu_css_class( $classes, $item, $args, $depth ) {
+    if ($depth === 0 ) {
+        if ( 
+            in_array( 'current-menu-item', $classes ) || 
+            in_array( 'current-menu-ancestor', $classes ) 
+        ) {
+            $classes[] = 'active';
+        }
+    }
+
+    return $classes;
+}
+add_filter( 'nav_menu_css_class', 'wpse_310629_nav_menu_css_class', 10, 4 );
