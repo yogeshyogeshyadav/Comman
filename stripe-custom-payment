@@ -1,0 +1,39 @@
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+var handler = StripeCheckout.configure({
+  key: 'pk_test_6pRNASCoBOKtIshFeQd4XMUh',
+  image: 'https://ghoomophiro.com/dev/sharkupdev/wp-content/uploads/2021/08/logo-300x64.png',
+  token: function(token) {
+    $("#stripeToken").val(token.id);
+    $("#stripeEmail").val(token.email);
+    $("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
+    $("#myForm").submit();
+  }
+});
+
+$('#customButton').on('click', function(e) {
+  var amountInCents = Math.floor($("#amountInDollars").val() * 100);
+  var displayAmount = parseFloat(Math.floor($("#amountInDollars").val() * 100) / 100).toFixed(2);
+  // Open Checkout with further options
+  handler.open({
+    name: 'Sharkup',
+    description: 'Custom amount (AED' + displayAmount + ')',
+    amount: amountInCents,
+    currency: 'aed'
+  });
+  e.preventDefault();
+});
+
+// Close Checkout on page navigation
+$(window).on('popstate', function() {
+  handler.close();
+});
+</script>
+
+<form id="myForm" action="//httpbin.org/post" method="POST">
+									<input type="hidden" id="amountInDollars" value="<?php echo $price; ?>" disabled />
+									<input type="hidden" id="stripeToken" name="stripeToken" />
+									<input type="hidden" id="stripeEmail" name="stripeEmail" />
+									<input type="hidden" id="amountInCents" name="amountInCents" />
+								</form>
+								<input type="button" id="customButton" class="btn btn-outline btn-lg" value="Confirm and submit" />
