@@ -1,0 +1,109 @@
+
+// register a custom post status 'email-notification' for Orders
+add_action( 'init', 'register_custom_post_status', 20 );
+function register_custom_post_status() {
+    register_post_status( 'wc-email-notification', array(
+        'label'                     => _x( 'Send Email Notification', 'Order status', 'woocommerce' ),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop( 'Send Email Notification <span class="count">(%s)</span>', 'Send Email Notification <span class="count">(%s)</span>', 'woocommerce' )
+    ) );
+}
+
+// Adding custom status 'email-notification' to order edit pages dropdown
+add_filter( 'wc_order_statuses', 'custom_wc_order_statuses' );
+function custom_wc_order_statuses( $order_statuses ) {
+    $order_statuses['wc-email-notification'] = _x( 'Send Email Notification', 'Order status', 'woocommerce' );
+    return $order_statuses;
+}
+
+// Adding custom status 'email-notification' to admin order list bulk dropdown
+add_filter( 'bulk_actions-edit-shop_order', 'custom_dropdown_bulk_actions_shop_order', 20, 1 );
+function custom_dropdown_bulk_actions_shop_order( $actions ) {
+    $actions['mark_email-notification'] = __( 'Send Email Notification', 'woocommerce' );
+    return $actions;
+}
+
+// Adding action for 'email-notification'
+add_filter( 'woocommerce_email_actions', 'custom_email_actions', 20, 1 );
+function custom_email_actions( $actions ) {
+    $actions[] = 'woocommerce_order_status_wc-email-notification';
+    return $actions;
+}
+
+add_action( 'woocommerce_order_status_wc-email-notification', array( WC(), 'send_transactional_email' ), 10, 1 );
+
+// Sending an email notification when order get 'email-notification' status
+add_action('woocommerce_order_status_email-notification', 'awaiting_delivery_order_status_email_notification', 20, 2);
+function awaiting_delivery_order_status_email_notification( $order_id, $order ) {
+    // HERE below your settings
+    $heading   = __('Send Email Notification','woocommerce');
+    $subject   = '[{site_title}] Send Email Notification ({order_number}) - {order_date}';
+
+        // The email notification type
+        $email_key   = 'WC_Email_Customer_Processing_Order';
+
+        // Get specific WC_emails object
+        $email_obj = WC()->mailer()->get_emails()[$email_key];
+
+        // Sending the customized email
+        $email_obj->trigger( $order_id );
+}
+
+// Customize email heading for this custom status email notification
+add_filter( 'woocommerce_email_heading_customer_processing_order', 'email_heading_customer_email_notification', 10, 2 );
+function email_heading_customer_email_notification( $heading, $order ){
+    if( $order->has_status( 'email-notification' ) ) {
+        $email_key   = 'WC_Email_Customer_Processing_Order'; // The email notification type
+        $email_obj   = WC()->mailer()->get_emails()[$email_key]; // Get specific WC_emails object
+        $heading_txt = __('Send Email Notification','woocommerce'); // New heading text
+
+        return $email_obj->format_string( $heading_txt );
+    }
+    return $heading;
+}
+
+// Customize email subject for this custom status email notification
+add_filter( 'woocommerce_email_subject_customer_processing_order', 'email_subject_customer_email_notification', 10, 2 );
+function email_subject_customer_email_notification( $subject, $order ){
+    if( $order->has_status( 'email-notification' ) ) {
+        $email_key   = 'WC_Email_Customer_Processing_Order'; // The email notification type
+        $email_obj   = WC()->mailer()->get_emails()[$email_key]; // Get specific WC_emails object
+        $subject_txt = sprintf( __('[%s] Send Email Notification (%s) - %s', 'woocommerce'), '{site_title}', '{order_number}', '{order_date}' ); // New subject text
+
+        return $email_obj->format_string( $subject_txt );
+    }
+    return $subject;
+}
+
+
+function gift_receipt_add_order_meta_box_action($actions)
+{
+    global $theorder;
+
+    $actions['send_gift_receipt'] = __('Send Gift Receipt', 'enyc');
+    return $actions;
+}
+
+add_action('woocommerce_order_actions', 'gift_receipt_add_order_meta_box_action');
+
+function gift_receipt_wc_process_order_meta_box_action($order)
+{
+
+    $mailer = WC()->mailer();
+    $mails = $mailer->get_emails();
+    if (!empty($mails))
+    {
+        foreach ($mails as $mail)
+        {
+            if ($mail->id == 'wc_gift_order_email')
+            {
+                $mail->trigger($order->id);
+            }
+        }
+    }
+}
+
+add_action('woocommerce_order_action_send_gift_receipt', 'gift_receipt_wc_process_order_meta_box_action');
