@@ -1,0 +1,68 @@
+add_action( 'init', 'register_custom_post_status', 20 );
+function register_custom_post_status() {
+    register_post_status( 'wc-send-reminder', array(
+        'label'                     => _x( 'Send Reminder', 'Order status', 'woocommerce' ),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop( 'Send Reminder <span class="count">(%s)</span>', 'Send Reminder <span class="count">(%s)</span>', 'woocommerce' )
+    ) );
+}
+
+// Adding custom status 'send-reminder' to order edit pages dropdown
+add_filter( 'wc_order_statuses', 'custom_wc_order_statuses', 20, 1 );
+function custom_wc_order_statuses( $order_statuses ) {
+    $order_statuses['wc-send-reminder'] = _x( 'Send Reminder', 'Order status', 'woocommerce' );
+    return $order_statuses;
+}
+
+// Adding custom status 'send-reminder' to admin order list bulk dropdown
+add_filter( 'bulk_actions-edit-shop_order', 'custom_dropdown_bulk_actions_shop_order', 20, 1 );
+function custom_dropdown_bulk_actions_shop_order( $actions ) {
+    $actions['mark_send-reminder'] = __( 'Send Reminder', 'woocommerce' );
+    return $actions;
+}
+
+// Adding action for 'send-reminder'
+add_filter( 'woocommerce_email_actions', 'custom_email_actions', 20, 1 );
+function custom_email_actions( $action ) {
+    $actions[] = 'woocommerce_order_status_wc-send-reminder';
+    return $actions;
+}
+
+add_action( 'woocommerce_order_status_wc-send-reminder', array( WC(), 'send_transactional_email' ), 10, 1 );
+
+// Sending an email notification when order get 'send-reminder' status
+add_action('woocommerce_order_status_send-reminder', 'backorder_status_custom_notification', 20, 2);
+function backorder_status_custom_notification( $order_id, $order ) {
+    // HERE below your settings
+    $heading   = __('Your Send Reminder order','woocommerce');
+    $subject   = '[{site_title}] Send Reminder order ({order_number}) - {order_date}';
+
+    // Getting all WC_emails objects
+    $mailer = WC()->mailer()->get_emails();
+
+    // Customizing Heading and subject In the WC_email processing Order object
+    $mailer['WC_Email_Customer_Processing_Order']->heading = $heading;
+    $mailer['WC_Email_Customer_Processing_Order']->subject = $subject;
+
+    // Sending the customized email
+    $mailer['WC_Email_Customer_Processing_Order']->trigger( $order_id );
+}
+
+
+add_action( 'manage_shop_order_posts_custom_column' , 'custom_orders_list_column_content', 20, 2 );
+function custom_orders_list_column_content( $column, $post_id ) {
+    global $the_order, $post;
+    if ( 'order_number' === $column ) {
+        $products_names = []; // Initializing
+        // Loop through order items
+        foreach ( $the_order->get_items() as $item ) {
+            $product = $item->get_product(); // Get the WC_Product object
+            $products_names[]  = $item->get_name(); // Store in an array
+        }
+        // Display
+        echo '<ul style="list-style: none;"><li>' . implode('</li><li>', $products_names) . '</li></ul>';
+    }
+}
