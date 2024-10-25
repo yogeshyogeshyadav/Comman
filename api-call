@@ -1,0 +1,183 @@
+functions.php 
+
+// Add AJAX actions for Zoho form submission
+add_action('wp_ajax_nopriv_submit_to_zoho', 'submit_to_zoho');
+add_action('wp_ajax_submit_to_zoho', 'submit_to_zoho');
+
+function submit_to_zoho() {
+    // Check for required fields
+    if (!isset($_POST['Name_First'], $_POST['Name_Last'], $_POST['PhoneNumber_countrycode'], $_POST['MultiLine'])) {
+        wp_send_json_error('Missing required fields.', 400);
+    }
+
+    // Sanitize and prepare data for Zoho
+    $form_data = array(
+        'Name_First' => sanitize_text_field($_POST['Name_First']),
+        'Name_Last' => sanitize_text_field($_POST['Name_Last']),
+        'PhoneNumber_countrycode' => sanitize_text_field($_POST['PhoneNumber_countrycode']),
+        'MultiLine' => sanitize_textarea_field($_POST['MultiLine']),
+    );
+
+    // Check for phone format
+    if (!preg_match('/^\+\d{1,3}\d{10}$/', $_POST['PhoneNumber_countrycode'])) {
+        wp_send_json_error('Phone number must be in the format +12147055138.', 400);
+    }
+
+    // Send data to Zoho
+    $response = wp_remote_post('https://forms.zohopublic.com/access9/form/Callmeform/formperma/dGFFCCzk_Ifg2JxnkEyGLuW4pOspWCMvCfmfarxv2q8/htmlRecords/submit', array(
+        'method' => 'POST',
+        'body' => $form_data,
+    ));
+
+    // Check for errors with Zoho response
+    if (is_wp_error($response)) {
+        wp_send_json_error('Error communicating with Zoho.', 500);
+    }
+
+    // Prepare data for the custom API as form data
+    $api_data = array(
+        'FirstName' => sanitize_text_field($_POST['Name_First']),
+        'LastName' => sanitize_text_field($_POST['Name_Last']),
+        'Phone' => sanitize_text_field($_POST['PhoneNumber_countrycode']),
+        'Message' => sanitize_textarea_field($_POST['MultiLine']),
+    );
+
+    // Log the data being sent to the custom API for debugging
+    error_log('Sending to custom API: ' . json_encode($api_data));
+
+    // Send data to your custom API as form data
+    $custom_api_response = wp_remote_post('https://zohointegration.onrender.com/generate-outbound-call', array(
+        'method' => 'POST',
+        'body' => $api_data, // Use the form data format
+        // No need to set Content-Type; it's handled automatically by WordPress
+    ));
+
+    // Check for errors with the custom API response
+    if (is_wp_error($custom_api_response)) {
+        wp_send_json_error('Error communicating with the custom API.', 500);
+    }
+
+    // Return the response from both APIs
+    wp_send_json_success(array(
+        'zoho_response' => wp_remote_retrieve_body($response),
+        'custom_api_response' => wp_remote_retrieve_body($custom_api_response),
+    ));
+}
+
+
+
+From with zoho CRM
+
+<div class="call-with-us">
+    <form id="form" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)" action="https://forms.zohopublic.com/access9/form/Callmeform/formperma/dGFFCCzk_Ifg2JxnkEyGLuW4pOspWCMvCfmfarxv2q8/htmlRecords/submit">
+        <div class="name-row name-wrap">
+            <div class="name">
+                <label for="Name_First">First Name <em>*</em></label>
+                <input type="text" maxlength="255" name="Name_First" id="Name_First" required />
+                <small class="error-message"></small>
+            </div>
+            <div class="name">
+                <label for="Name_Last">Last Name <em>*</em></label>
+                <input type="text" maxlength="255" name="Name_Last" id="Name_Last" required />
+                <small class="error-message"></small>
+            </div>
+        </div>
+
+        <label for="PhoneNumber_countrycode">Phone <em>*</em></label>
+        <input type="text" name="PhoneNumber_countrycode" id="PhoneNumber_countrycode" maxlength="15" required />
+        <small class="error-message"></small>
+
+        <label for="MultiLine">Message <em>*</em></label>
+        <textarea name="MultiLine" id="MultiLine" maxlength="65535" required></textarea>
+        <small class="error-message"></small>
+
+        <button type="submit">Give Us a Ring</button>
+
+        <div class="powered-by">
+            <span>
+                <a href="/ai-development/ai-voice-assistant/" target="_blank">
+                    Powered by <span style="color:#E61937;">Digital</span>.<span style="color:#7f838b;">Web</span>.<span style="color:#004276;">Help</span> AI
+                </a>
+            </span>
+        </div>
+    </form>
+</div>
+
+<script>
+    function isValidPhone(phone) {
+        return /^\+\d{1,3}\d{10}$/.test(phone);
+    }
+    document.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('focusout', (e) => validateField(e.target));
+    });
+
+    function validateField(field) {
+        const value = field.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+
+        switch (field.name) {
+            case 'PhoneNumber_countrycode':
+                isValid = isValidPhone(value);
+                errorMessage = isValid ? '' : 'Phone number must be in the format +12147055138.';
+                break;
+            default:
+                isValid = value !== '';
+                errorMessage = isValid ? '' : 'This field is required.';
+        }
+
+        const errorElement = field.nextElementSibling;
+        if (!isValid) {
+            field.style.borderColor = 'red';
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = 'block';
+        } else {
+            field.style.borderColor = '';
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+        }
+        return isValid;
+    }
+
+    async function handleFormSubmit(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        let allValid = true;
+
+        // Validate all fields
+        form.querySelectorAll('input, textarea').forEach(input => {
+            const isValid = validateField(input);
+            if (!isValid) allValid = false;
+        });
+
+        if (!allValid) return; // Stop if any validation fails
+
+        // Gather form data
+        const formData = new FormData(form);
+
+        // Send data to your custom proxy
+        try {
+            const response = await fetch(`${window.location.origin}/wp-admin/admin-ajax.php?action=submit_to_zoho`, {
+                method: 'POST',
+                body: formData, // Automatically sets Content-Type to multipart/form-data
+                headers: {
+                    'Connection': 'keep-alive' // Add Connection header
+                }
+            });
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                console.error('Error submitting to Zoho:', responseData);
+                alert('Failed to submit to Zoho: ' + responseData.data || 'Please try again.');
+            } else {
+                alert('Your request has been submitted successfully!');
+                form.reset();
+            }
+        } catch (error) {
+            console.error('Error submitting the form:', error);
+            alert('An error occurred while submitting the form. Please try again later.');
+        }
+    }
+</script>
